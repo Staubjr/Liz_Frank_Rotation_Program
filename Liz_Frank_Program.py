@@ -1,10 +1,10 @@
-
-import scipy.spatial.transform
+from scipy.spatial.transform import Rotation as R
 import numpy as np
 import math
 import random
 import matplotlib.pyplot as plt
 import physvis as vis
+import sys
 
 class txt:
 
@@ -46,6 +46,10 @@ class foot:
 
 class bone:
 
+    """ Class for the 3 screws in one foot bone and their coordinates.
+        Coordinates are in the fom of a list for all the time points/weights.
+    """
+
     def __init__(self, x1, y1, z1, x2, y2, z2, x3, y3, z3):
         self.x1 = x1
         self.x2 = x2
@@ -56,8 +60,11 @@ class bone:
         self.z1 = z1
         self.z2 = z2
         self.z3 = z3
+        self.initial_matrix = np.zeros((3,3))
         self.initialize_axes()
-
+        self.test_matrix = np.array([1., 0., 0.],[0., 1., 0.], [0., 0., 1.])
+        self.unit_vector = np.array([[1/math.sqrt(3)], [1/math.sqrt(3)], [1/math.sqrt(3)]])
+        
     def mag(vector):
         return math.sqrt(vector[0]**2 + vector[1]**2 + vector[2]**2)
         
@@ -73,12 +80,26 @@ class bone:
         axis_2 = np.cross(axis_1, temp_vector)
         axis_3 = np.cross(axis_1, axis_2)
 
-        axis_1 /= bone.mag(axis_1)
-        axis_2 /= bone.mag(axis_2)
-        axis_3 /= bone.mag(axis_3)
+        self.initial_matrix[0] = axis_1/bone.mag(axis_1)
+        self.initial_matrix[1] = axis_2/bone.mag(axis_2)
+        self.initial_matrix[2] = axis_3/bone.mag(axis_3)
 
-        print(axis_1, axis_2, axis_3, bone.mag(axis_1), bone.mag(axis_2), bone.mag(axis_3))
         
+
+        
+        
+        sys.exit(30)
+
+    def get_translation_vector(self, axis_1, axis_2):
+
+        """ Uh oh, looks like we are going to have to use some quaternions here!
+        """
+
+        
+
+
+    def get_rotation_vector(self):
+        pass
 
 # class visual:
 
@@ -94,7 +115,7 @@ class main:
     Y3 = random.uniform(0, 5.0)
     Z3 = random.uniform(0, 5.0)    
 
-    test = screw(x1 = X1, y1 = Y1, z1 = Z1, x2 = X2, y2 = Y2, z2 = Z2, x3 = X3, y3 = Y3, z3 = Z3)
+    test = bone(x1 = X1, y1 = Y1, z1 = Z1, x2 = X2, y2 = Y2, z2 = Z2, x3 = X3, y3 = Y3, z3 = Z3)
     
 if __name__ == "__main__":
     main()
