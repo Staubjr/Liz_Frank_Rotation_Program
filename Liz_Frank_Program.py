@@ -3,7 +3,7 @@ import numpy as np
 import math
 import random
 import matplotlib.pyplot as plt
-import physvis as vis
+# import physvis as vis
 import sys
 
 class txt:
@@ -62,8 +62,9 @@ class bone:
         self.z3 = z3
         self.initial_matrix = np.zeros((3,3))
         self.test_matrix = np.array([[1., 0., 0.],[0., 1., 0.], [0., 0., 1.]])
-        self.unit_vector = np.array([[1/math.sqrt(3)], [1/math.sqrt(3)], [1/math.sqrt(3)]])
-        self.initialize_axes()        
+        self.unit_vector = np.array([1/math.sqrt(3), 1/math.sqrt(3), 1/math.sqrt(3)])
+        self.initialize_axes()
+        self.get_translation_vector(self.test_matrix, self.initial_matrix)
         
     def mag(vector):
         return math.sqrt(vector[0]**2 + vector[1]**2 + vector[2]**2)
@@ -84,21 +85,31 @@ class bone:
         self.initial_matrix[1] = axis_2/bone.mag(axis_2)
         self.initial_matrix[2] = axis_3/bone.mag(axis_3)
 
-        print(self.unit_vector)
+        # print(self.unit_vector)
 
-        print(self.unit_vector.dot(self.initial_matrix))
+        # print(self.unit_vector.dot(self.initial_matrix))
         
+        # sys.exit(30)
 
-        
-        
-        sys.exit(30)
-
-    def get_translation_vector(self, axis_1, axis_2):
+    def get_translation_vector(self, coordinates_1, coordinates_2):
 
         """ Uh oh, looks like we are going to have to use some quaternions here!
         """
 
-        
+        axis_1 = coordinates_1[0]
+        axis_2 = coordinates_1[1]
+        axis_3 = coordinates_1[2]
+        axis_4 = coordinates_2[0]
+        axis_5 = coordinates_2[1]
+        axis_6 = coordinates_2[2]
+
+        axis_4_hat = axis_4/bone.mag(axis_4)
+        axis_5_hat = axis_5/bone.mag(axis_5)
+        axis_6_hat = axis_6/bone.mag(axis_6)
+
+        axis_2_prime = axis_2.dot(axis_4) * axis_4_hat + axis_2.dot(axis_5) * axis_5_hat
+        axis_2_prime /= bone.mag(axis_2_prime)
+        print(axis_2_prime, axis_2)        
 
 
     def get_rotation_vector(self):
@@ -109,13 +120,13 @@ class bone:
 class main:
     
     X1 = random.uniform(0, 5.0)
-    Y1 = random.uniform(0, 5.0)
-    Z1 = random.uniform(0, 5.0)
-    X2 = random.uniform(0, 5.0)
+    Y1 = random.uniform(0, 1.0)
+    Z1 = random.uniform(0, 1.0)
+    X2 = random.uniform(0, 1.0)
     Y2 = random.uniform(0, 5.0)
-    Z2 = random.uniform(0, 5.0)
-    X3 = random.uniform(0, 5.0)
-    Y3 = random.uniform(0, 5.0)
+    Z2 = random.uniform(0, 1.0)
+    X3 = random.uniform(0, 1.0)
+    Y3 = random.uniform(0, 1.0)
     Z3 = random.uniform(0, 5.0)    
 
     test = bone(x1 = X1, y1 = Y1, z1 = Z1, x2 = X2, y2 = Y2, z2 = Z2, x3 = X3, y3 = Y3, z3 = Z3)
