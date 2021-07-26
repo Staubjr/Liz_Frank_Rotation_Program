@@ -61,9 +61,9 @@ class bone:
         self.z2 = z2
         self.z3 = z3
         self.initial_matrix = np.zeros((3,3))
-        self.initialize_axes()
-        self.test_matrix = np.array([1., 0., 0.],[0., 1., 0.], [0., 0., 1.])
+        self.test_matrix = np.array([[1., 0., 0.],[0., 1., 0.], [0., 0., 1.]])
         self.unit_vector = np.array([[1/math.sqrt(3)], [1/math.sqrt(3)], [1/math.sqrt(3)]])
+        self.initialize_axes()        
         
     def mag(vector):
         return math.sqrt(vector[0]**2 + vector[1]**2 + vector[2]**2)
@@ -84,6 +84,9 @@ class bone:
         self.initial_matrix[1] = axis_2/bone.mag(axis_2)
         self.initial_matrix[2] = axis_3/bone.mag(axis_3)
 
+        print(self.unit_vector)
+
+        print(self.unit_vector.dot(self.initial_matrix))
         
 
         
