@@ -124,6 +124,7 @@ class bone:
 
         axis_2_prime = axis_2.dot(axis_4) * axis_4_hat + axis_2.dot(axis_5) * axis_5_hat
         axis_2_prime /= bone.mag(axis_2_prime)
+        vis.arrow(pos = self.origin_screw.pos, axis = axis_2_prime)
 
     def visualize_bone(self):
 
@@ -159,12 +160,9 @@ class visual:
 
     all_visual_axes = []
 
-    screw_color = { "one"   : (255., 0., 0.),
-                    "two"   : (0., 255., 0.),
-                    "three" : (0., 0., 255.)  }
-
-    # ^^^ This needs to be the bone screw color. Also, need to make the screw, arrow, and bone class
-    #     clear and able to be called in the visual class
+    screw_color = { "origin"   : (255., 0., 0.),
+                    "screw_2"   : (0., 255., 0.),
+                    "screw_3" : (0., 0., 255.)  }
 
     arrow_color = ( 255.0/255, 222.0/255, 0.)
 
@@ -172,13 +170,13 @@ class visual:
         
         if object.__class__.__name__ == 'screw':
             self.screw_object = object
-            self.visual = vis.sphere(pos = object.pos, radius = 0.125, color = (1.0, 0., 0.))
+            self.visual = vis.sphere(pos = object.pos, radius = 0.125, color = visual.screw_color[object.identity])
             visual.all_visual_screws.append(self)
 
         if object.__class__.__name__ == 'bone':
             self.axes_object = object
-            self.visual_axis_1 = vis.arrow(pos = object.origin_screw.pos, axis = object.local_axes_matrix[0], color = visual.arrow_color)
-            self.visual_axis_2 = vis.arrow(pos = object.origin_screw.pos, axis = object.local_axes_matrix[1], color = visual.arrow_color)
+            self.visual_axis_1 = vis.arrow(pos = object.origin_screw.pos, axis = object.local_axes_matrix[0], color = (1., 0., 0.))
+            self.visual_axis_2 = vis.arrow(pos = object.origin_screw.pos, axis = object.local_axes_matrix[1], color = (0., 1., 0.))
             self.visual_axis_3 = vis.arrow(pos = object.origin_screw.pos, axis = object.local_axes_matrix[2], color = visual.arrow_color)
             visual.all_visual_axes.append(self)
 
@@ -199,9 +197,14 @@ def main():
     t = 0
     dt = 1E-3
 
+    vis.xaxis()
+    vis.yaxis()
+    vis.zaxis()
+
     while t <= 100:
         
         vis.rate(30)
+        
     
 if __name__ == "__main__":
     main()
