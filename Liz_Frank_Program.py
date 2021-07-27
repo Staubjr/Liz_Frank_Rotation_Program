@@ -178,27 +178,22 @@ class visual:
 
 def main():
     
-    X1 = random.uniform(0, 5.0)
-    Y1 = random.uniform(0, 5.0)
-    Z1 = random.uniform(0, 5.0)
-    X2 = random.uniform(0, 5.0)
-    Y2 = random.uniform(0, 5.0)
-    Z2 = random.uniform(0, 5.0)
-    X3 = random.uniform(0, 5.0)
-    Y3 = random.uniform(0, 5.0)
-    Z3 = random.uniform(0, 5.0)    
+    X1 = random.uniform(0, 2.0)
+    Y1 = random.uniform(0, 2.0)
+    Z1 = random.uniform(0, 2.0)
+    X2 = random.uniform(0, 2.0)
+    Y2 = random.uniform(0, 2.0)
+    Z2 = random.uniform(0, 2.0)
+    X3 = random.uniform(0, 2.0)
+    Y3 = random.uniform(0, 2.0)
+    Z3 = random.uniform(0, 2.0)    
 
     test = bone(x1 = X1, y1 = Y1, z1 = Z1, x2 = X2, y2 = Y2, z2 = Z2, x3 = X3, y3 = Y3, z3 = Z3)
-
-    # sphere = vis.sphere(pos = np.array([0., 0., 0.]), radius = 0.25)
-    # arrow = vis.arrow(pos = sphere.pos, axis = np.array([2.0, 0., 0.]))
 
     t = 0
     dt = 1E-3
 
     while t <= 100:
-        sphere.pos = np.zeros(3)
-        t += dt
         
         vis.rate(30)
     
