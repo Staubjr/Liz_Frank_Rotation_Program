@@ -75,7 +75,7 @@ class bone:
         self.global_axes_matrix = np.array([[1., 0., 0.],[0., 1., 0.], [0., 0., 1.]])
         self.unit_vector = np.array([1/math.sqrt(3), 1/math.sqrt(3), 1/math.sqrt(3)])
         self.initialize_axes()
-        self.get_translation_vector(self.local_axes_matrix)
+        self.translate_screws()
         self.get_rotation_vector(self.global_axes_matrix, self.local_axes_matrix)
         self.visualize_bone()
         
@@ -93,15 +93,21 @@ class bone:
 
         axis_2 = np.cross(axis_1, temp_vector)
         axis_3 = np.cross(axis_1, axis_2)
+        axis_3 -= 2*axis_3
 
         self.local_axes_matrix[0] = axis_1/bone.mag(axis_1)
         self.local_axes_matrix[1] = axis_2/bone.mag(axis_2)
         self.local_axes_matrix[2] = axis_3/bone.mag(axis_3)
 
-    def get_translation_vector(self, axes):
+    def translate_screws(self):
+        
+        translation_vector = -1 * self.origin_screw.pos
+        print(self.origin_screw.pos, translation_vector)
+        self.origin_screw.pos += translation_vector
+        self.screw_2.pos += translation_vector
+        self.screw_3.pos += translation_vector
 
-        translation_vector = np.zeros(3) - axes[0]
-        return translation_vector
+        print(self.origin_screw.pos)
         
     def get_rotation_vector(self, global_axes, local_axes):
 
@@ -124,6 +130,7 @@ class bone:
         self.origin_screw.visualize_screw()
         self.screw_2.visualize_screw()
         self.screw_3.visualize_screw()
+        visual(self)
 
 class screw:
 
@@ -167,13 +174,12 @@ class visual:
             self.screw_object = object
             self.visual = vis.sphere(pos = object.pos, radius = 0.125, color = (1.0, 0., 0.))
             visual.all_visual_screws.append(self)
-            print('making a screw')
 
         if object.__class__.__name__ == 'bone':
             self.axes_object = object
-            self.visual_axis_1 = vis.arrow(pos = object.screw_1_pos, axis = object[0], color = visual.arrow_color)
-            self.visual_axis_2 = vis.arrow(pos = object.screw_1_pos, axis = object[1], color = visual.arrow_color)
-            self.visual_axis_3 = vis.arrow(pos = object.screw_1_pos, axis = object[2], color = visual.arrow_color)
+            self.visual_axis_1 = vis.arrow(pos = object.origin_screw.pos, axis = object.local_axes_matrix[0], color = visual.arrow_color)
+            self.visual_axis_2 = vis.arrow(pos = object.origin_screw.pos, axis = object.local_axes_matrix[1], color = visual.arrow_color)
+            self.visual_axis_3 = vis.arrow(pos = object.origin_screw.pos, axis = object.local_axes_matrix[2], color = visual.arrow_color)
             visual.all_visual_axes.append(self)
 
 def main():
