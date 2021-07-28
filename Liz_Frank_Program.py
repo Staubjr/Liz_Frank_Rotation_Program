@@ -76,7 +76,7 @@ class bone:
         self.unit_vector = np.array([1/math.sqrt(3), 1/math.sqrt(3), 1/math.sqrt(3)])
         self.initialize_axes()
         self.translate_screws()
-        self.get_rotation_vector(self.global_axes_matrix, self.local_axes_matrix)
+        self.get_rotation_matrix(self.global_axes_matrix, self.local_axes_matrix)
         self.visualize_bone()
         
     def mag(vector):
@@ -106,7 +106,7 @@ class bone:
         self.screw_2.pos += translation_vector
         self.screw_3.pos += translation_vector
         
-    def get_rotation_vector(self, global_axes, local_axes):
+    def get_rotation_matrix(self, global_axes, local_axes):
 
         """ Note that 1, 2, 3 corresponds to x, y, z both globally and locally """
 
@@ -134,8 +134,9 @@ class bone:
 
         psi = math.acos( axis_2_prime.dot(axis_5) / (bone.mag(axis_2_prime) * bone.mag(axis_5) ) )
 
-        euler_rotation_matrix = np.([ [math.cos(psi)*math.cos(theta)*math.cos(phi) - math.sin(psi)*math.sin(phi)
-
+        euler_rotation_matrix = np.array([ [math.cos(psi)*math.cos(theta)*math.cos(phi) - math.sin(psi)*math.sin(phi), -math.cos(psi)*math.sin(phi) - math.sin(psi)*math.cos(theta)*math.cos(phi), math.sin(theta)*math.cos(phi)],
+                                         [math.cos(psi)*math.cos(theta)*math.sin(phi) + math.sin(psi)*math.cos(phi), math.cos(psi)*math.cos(phi) - math.sin(psi)*math.cos(theta)*math.sin(phi) , math.sin(theta)*math.sin(phi)],
+                                         [-math.cos(psi)*math.sin(theta)                                           , math.sin(psi)*math.sin(theta)                                             , math.cos(theta)              ] ])
 
     def visualize_bone(self):
 
@@ -191,7 +192,7 @@ class visual:
             self.visual_axis_3 = vis.arrow(pos = object.origin_screw.pos, axis = object.local_axes_matrix[1], color = (0., 0., 1.))
             visual.all_visual_axes.append(self)
 
-#################################################################################################################            
+######################################################################################################################################            
 
 def main():
 
