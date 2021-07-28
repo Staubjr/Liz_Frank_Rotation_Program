@@ -102,14 +102,13 @@ class bone:
     def translate_screws(self):
         
         translation_vector = -1 * self.origin_screw.pos
-        print(self.origin_screw.pos, translation_vector)
         self.origin_screw.pos += translation_vector
         self.screw_2.pos += translation_vector
         self.screw_3.pos += translation_vector
-
-        print(self.origin_screw.pos)
         
     def get_rotation_vector(self, global_axes, local_axes):
+
+        """ Note that 1, 2, 3 corresponds to x, y, z both globally and locally """
 
         axis_1 = global_axes[0]
         axis_2 = global_axes[1]
@@ -125,6 +124,13 @@ class bone:
         axis_2_prime = axis_2.dot(axis_4) * axis_4_hat + axis_2.dot(axis_5) * axis_5_hat
         axis_2_prime /= bone.mag(axis_2_prime)
         vis.arrow(pos = self.origin_screw.pos, axis = axis_2_prime)
+
+        phi = math.acos(axis_2.dot(axis_2_prime) / ( bone.mag(axis_2) * bone.mag(axis_2_prime) ) )
+
+        axis_3_rotation_matrix = np.array([[math.cos(phi), -1*math.sin(phi), 0.], [math.sin(phi), math.cos(phi), 0.], [0., 0., 1.]])
+
+        axis_1_prime = axis_1.dot(axis_3_rotation_matrix)
+        axis_2_prime_check = axis_2.dot(axis_3_rotation_matrix)
 
     def visualize_bone(self):
 
@@ -177,19 +183,37 @@ class visual:
             self.axes_object = object
             self.visual_axis_1 = vis.arrow(pos = object.origin_screw.pos, axis = object.local_axes_matrix[0], color = (1., 0., 0.))
             self.visual_axis_2 = vis.arrow(pos = object.origin_screw.pos, axis = object.local_axes_matrix[1], color = (0., 1., 0.))
-            self.visual_axis_3 = vis.arrow(pos = object.origin_screw.pos, axis = object.local_axes_matrix[2], color = visual.arrow_color)
+            self.visual_axis_3 = vis.arrow(pos = object.origin_screw.pos, axis = object.local_axes_matrix[2], color = (0., 0., 1.))
             visual.all_visual_axes.append(self)
 
+#################################################################################################################            
+
 def main():
+
+    """ Main function to run program.
+
+        First, let's still use the random function to make one screw close to the origin, one screw
+        close to the x-axis, and one screw close to the y-axis.  This way we should get a local coordinate system
+        that is close to the actual global coordinate system.
+
+    """
+
+# Origin Screw
     
-    X1 = random.uniform(0, 2.0)
-    Y1 = random.uniform(0, 2.0)
-    Z1 = random.uniform(0, 2.0)
-    X2 = random.uniform(0, 2.0)
+    X1 = random.uniform(0, 0.5)
+    Y1 = random.uniform(0, 0.5)
+    Z1 = random.uniform(0, 0.5)
+    
+# X-axis Screw
+    
+    X2 = random.uniform(3.0, 5.0)
     Y2 = random.uniform(0, 2.0)
     Z2 = random.uniform(0, 2.0)
+
+# Y-axis Screw
+        
     X3 = random.uniform(0, 2.0)
-    Y3 = random.uniform(0, 2.0)
+    Y3 = random.uniform(3.0, 5.0)
     Z3 = random.uniform(0, 2.0)    
 
     test = bone(x1 = X1, y1 = Y1, z1 = Z1, x2 = X2, y2 = Y2, z2 = Z2, x3 = X3, y3 = Y3, z3 = Z3)
