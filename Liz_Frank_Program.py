@@ -114,23 +114,28 @@ class bone:
         axis_2 = global_axes[1]
         axis_3 = global_axes[2]
         axis_4 = local_axes[0]
-        axis_5 = local_axes[1]
-        axis_6 = local_axes[2]
+        axis_5 = local_axes[2]
+        axis_6 = local_axes[1]
 
         axis_4_hat = axis_4/bone.mag(axis_4)
         axis_5_hat = axis_5/bone.mag(axis_5)
         axis_6_hat = axis_6/bone.mag(axis_6)
 
-        axis_2_prime = axis_2.dot(axis_4) * axis_4_hat + axis_2.dot(axis_5) * axis_5_hat
-        axis_2_prime /= bone.mag(axis_2_prime)
-        vis.arrow(pos = self.origin_screw.pos, axis = axis_2_prime)
+        axis_1_prime = np.array([axis_6[0], axis_6[1], 0.])
+        phi = math.acos( axis_1.dot(axis_1_prime) / (bone.mag(axis_1) * bone.mag(axis_1_prime)) )
 
-        phi = math.acos(axis_2.dot(axis_2_prime) / ( bone.mag(axis_2) * bone.mag(axis_2_prime) ) )
+        axis_3_rotation_matrix = np.array([[math.cos(phi), -1*math.sin(phi), 0.],
+                                           [math.sin(phi), math.cos(phi)   , 0.],
+                                           [0.           , 0.              , 1.]])
 
-        axis_3_rotation_matrix = np.array([[math.cos(phi), -1*math.sin(phi), 0.], [math.sin(phi), math.cos(phi), 0.], [0., 0., 1.]])
+        axis_2_prime = axis_2.dot(axis_3_rotation_matrix)
+        
+        theta = math.acos( axis_3.dot(axis_6) / ( bone.mag(axis_3) * bone.mag(axis_6) ) )
 
-        axis_1_prime = axis_1.dot(axis_3_rotation_matrix)
-        axis_2_prime_check = axis_2.dot(axis_3_rotation_matrix)
+        psi = math.acos( axis_2_prime.dot(axis_5) / (bone.mag(axis_2_prime) * bone.mag(axis_5) ) )
+
+        euler_rotation_matrix = np.([ [math.cos(psi)*math.cos(theta)*math.cos(phi) - math.sin(psi)*math.sin(phi)
+
 
     def visualize_bone(self):
 
@@ -182,8 +187,8 @@ class visual:
         if object.__class__.__name__ == 'bone':
             self.axes_object = object
             self.visual_axis_1 = vis.arrow(pos = object.origin_screw.pos, axis = object.local_axes_matrix[0], color = (1., 0., 0.))
-            self.visual_axis_2 = vis.arrow(pos = object.origin_screw.pos, axis = object.local_axes_matrix[1], color = (0., 1., 0.))
-            self.visual_axis_3 = vis.arrow(pos = object.origin_screw.pos, axis = object.local_axes_matrix[2], color = (0., 0., 1.))
+            self.visual_axis_2 = vis.arrow(pos = object.origin_screw.pos, axis = object.local_axes_matrix[2], color = (0., 1., 0.))
+            self.visual_axis_3 = vis.arrow(pos = object.origin_screw.pos, axis = object.local_axes_matrix[1], color = (0., 0., 1.))
             visual.all_visual_axes.append(self)
 
 #################################################################################################################            
