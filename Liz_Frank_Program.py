@@ -141,6 +141,8 @@ class bone:
 
         phi = math.acos( axis_1.dot(axis_1_prime) / (bone.mag(axis_1) * bone.mag(axis_1_prime) ) )
 
+        
+
         theta = math.acos( axis_3.dot(axis_6) / ( bone.mag(axis_3) * bone.mag(axis_6) ) )
 
         psi = math.acos( axis_1_prime.dot(axis_4) / (bone.mag(axis_1_prime) * bone.mag(axis_4) ) )        
@@ -184,13 +186,11 @@ class bone:
                                           [math.cos(psi)*math.sin(phi) + math.cos(theta)*math.cos(phi)*math.sin(psi), -math.sin(phi)*math.sin(psi) + math.cos(theta)*math.cos(phi)*math.cos(psi), -math.sin(theta)*math.cos(phi)],
                                           [math.sin(theta)*math.sin(psi)                                            , math.sin(theta)*math.cos(psi)                                             ,  math.cos(theta)              ] ] )
 
+        check_1 = axis_1.dot(euler_rotation_matrix)
+        check_1_2 = axis_1.dot(euler_rotation_matrix_check)
 
-        print(euler_rotation_matrix)
-        print(euler_rotation_matrix_check)
-        
-        # check = axis_2.dot(euler_rotation_matrix)
-
-        # print(check, axis_5_hat)
+        vis.arrow(pos = (0., 0., 0.), axis = check_1)
+        vis.arrow(pos = (0., 0., 0.), axis = check_1_2, color = (1.0, 0., 1.0))
 
     def visualize_bone(self):
 
