@@ -131,12 +131,12 @@ class bone:
         axis_2_prime = axis_2.dot(axis_3_rotation_matrix)
         
         theta = math.acos( axis_3.dot(axis_6) / ( bone.mag(axis_3) * bone.mag(axis_6) ) )
-
+        
         psi = math.acos( axis_2_prime.dot(axis_5) / (bone.mag(axis_2_prime) * bone.mag(axis_5) ) )
-
-        # euler_rotation_matrix = np.array([ [math.cos(psi)*math.cos(theta)*math.cos(phi) - math.sin(psi)*math.sin(phi)  , -math.cos(psi)*math.sin(phi) - math.sin(psi)*math.cos(theta)*math.cos(phi), math.sin(theta)*math.cos(phi)],
-        #                                    [math.cos(psi)*math.cos(theta)*math.sin(phi) + math.sin(psi)*math.cos(phi)  , math.cos(psi)*math.cos(phi) - math.sin(psi)*math.cos(theta)*math.sin(phi) , math.sin(theta)*math.sin(phi)],
-        #                                    [-math.cos(psi)*math.sin(theta)                                             , math.sin(psi)*math.sin(theta)                                             , math.cos(theta)              ] ])
+        
+        euler_rotation_matrix_check = np.array([ [math.cos(psi)*math.cos(theta)*math.cos(phi) - math.sin(psi)*math.sin(phi)  , -math.cos(psi)*math.sin(phi) - math.sin(psi)*math.cos(theta)*math.cos(phi), math.sin(theta)*math.cos(phi)],
+                                           [math.cos(psi)*math.cos(theta)*math.sin(phi) + math.sin(psi)*math.cos(phi)  , math.cos(psi)*math.cos(phi) - math.sin(psi)*math.cos(theta)*math.sin(phi) , math.sin(theta)*math.sin(phi)],
+                                           [-math.cos(psi)*math.sin(theta)                                             , math.sin(psi)*math.sin(theta)                                             , math.cos(theta)              ] ])
         # This is Dr. Knop's version that is not correct
 
         # euler_rotation_matrix = np.array([ [math.cos(psi)*math.cos(phi) - math.cos(theta)*math.sin(phi)*math.sin(psi) , math.cos(psi)*math.sin(phi) + math.cos(theta)*math.cos(phi)*math.sin(psi) , math.sin(psi)*math.sin(theta)],
@@ -144,13 +144,36 @@ class bone:
         #                                    [math.sin(theta)*math.sin(phi)                                             , -math.sin(theta)*math.cos(phi)                                            , math.cos(theta)              ] ])
         # this is the one based on lines 6-14, this appears to flip the x and y
 
-        euler_rotation_matrix = np.array([ [-math.sin(psi)*math.sin(phi) + math.cos(theta)*math.cos(phi)*math.cos(psi), math.sin(psi)*math.cos(phi) + math.cos(theta)*math.sin(phi)*math.cos(psi), -math.cos(psi)*math.sin(theta)],
-                                           [-math.cos(psi)*math.sin(phi) - math.cos(theta)*math.cos(phi)*math.sin(psi), math.cos(psi)*math.cos(phi) - math.cos(theta)*math.sin(phi)*math.sin(psi), math.sin(psi)*math.sin(theta) ],
-                                           [math.sin(theta)*math.cos(phi)                                             , math.sin(theta)*math.sin(phi)                                            , math.cos(theta)               ] ] )
+        # euler_rotation_matrix = np.array([ [-math.sin(psi)*math.sin(phi) + math.cos(theta)*math.cos(phi)*math.cos(psi), math.sin(psi)*math.cos(phi) + math.cos(theta)*math.sin(phi)*math.cos(psi), -math.cos(psi)*math.sin(theta)],
+        #                                    [-math.cos(psi)*math.sin(phi) - math.cos(theta)*math.cos(phi)*math.sin(psi), math.cos(psi)*math.cos(phi) - math.cos(theta)*math.sin(phi)*math.sin(psi), math.sin(psi)*math.sin(theta) ],
+        #                                    [math.sin(theta)*math.cos(phi)                                             , math.sin(theta)*math.sin(phi)                                            , math.cos(theta)               ] ] )
+        # this is the one based on lines 39-47, this sometimes flips the y in sign, but all magnitudes are correct
 
-        check = axis_3.dot(euler_rotation_matrix)
+        # rotation matrix about the z-axis (line 3)
 
-        print(check, axis_6_hat)
+        rotation_matrix_1 = np.array([ [ math.cos(phi), math.sin(phi), 0.],
+                                       [-math.sin(phi), math.cos(phi), 0.],
+                                       [0.            , 0.           , 1.] ] )
+
+        # rotation matrix about the y' / y" axis (line 49)
+
+        rotation_matrix_2 = np.array([ [ math.cos(theta), 0.             , -math.sin(phi) ],
+                                       [ 0.             , 1.             , 0.             ],
+                                       [ math.sin(theta), 0.             , math.cos(theta)] ] ) 
+
+        # rotation matrix about the z'-axis (line 5)
+
+        rotation_matrix_3 = np.array([ [math.cos(psi) , math.sin(psi), 0.],
+                                       [-math.sin(psi), math.cos(psi), 0.],
+                                       [0.            , 0.           , 1.] ] )
+
+        euler_rotation_matrix = rotation_matrix_3.dot(rotation_matrix_2.dot(rotation_matrix_1))
+        print(euler_rotation_matrix)
+        print(euler_rotation_matrix_check)
+        
+        check = axis_1.dot(euler_rotation_matrix)
+
+        print(check, axis_4_hat)
 
     def visualize_bone(self):
 
