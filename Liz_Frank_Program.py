@@ -135,8 +135,11 @@ class bone:
         psi = math.acos( axis_2_prime.dot(axis_5) / (bone.mag(axis_2_prime) * bone.mag(axis_5) ) )
 
         euler_rotation_matrix = np.array([ [math.cos(psi)*math.cos(theta)*math.cos(phi) - math.sin(psi)*math.sin(phi), -math.cos(psi)*math.sin(phi) - math.sin(psi)*math.cos(theta)*math.cos(phi), math.sin(theta)*math.cos(phi)],
-                                         [math.cos(psi)*math.cos(theta)*math.sin(phi) + math.sin(psi)*math.cos(phi), math.cos(psi)*math.cos(phi) - math.sin(psi)*math.cos(theta)*math.sin(phi) , math.sin(theta)*math.sin(phi)],
-                                         [-math.cos(psi)*math.sin(theta)                                           , math.sin(psi)*math.sin(theta)                                             , math.cos(theta)              ] ])
+                                         [math.cos(psi)*math.cos(theta)*math.sin(phi) + math.sin(psi)*math.cos(phi)  , math.cos(psi)*math.cos(phi) - math.sin(psi)*math.cos(theta)*math.sin(phi) , math.sin(theta)*math.sin(phi)],
+                                         [-math.cos(psi)*math.sin(theta)                                             , math.sin(psi)*math.sin(theta)                                             , math.cos(theta)              ] ])
+
+        axis_1_check = axis_1.dot(euler_rotation_matrix)
+        print(axis_4, axis_1_check)
 
     def visualize_bone(self):
 
