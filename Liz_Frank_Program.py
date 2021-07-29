@@ -127,12 +127,13 @@ class bone:
         axis_1_prime = np.cross(axis_3, axis_6)
         axis_1_prime /= bone.mag(axis_1_prime)
 
-        vis.arrow(pos = (0., 0., 0.), axis = axis_1_prime)
-
         # if axis_3[0] == axis_6_hat[0] and axis_3[1] == axis_3[1] and axis_3[2] == axis_3[2]:
         #     axis_1_prime = np.array([0., 0., 0.])
         
         phi = math.acos( axis_1.dot(axis_1_prime) / ( bone.mag(axis_1) * bone.mag(axis_1_prime) ) )
+
+        if axis_1_prime[1] < 0.0:
+            phi = 2*math.pi - phi
 
         rotation_matrix_axis_3 = np.array([ [ math.cos(phi), math.sin(phi), 0.],
                                             [-math.sin(phi), math.cos(phi), 0.],
@@ -151,13 +152,13 @@ class bone:
         # rotation matrix about the y' / y" 
 
         rotation_matrix_2 = np.array([ [1.0, 0.              , 0.               ],
-                                       [0., math.cos(theta)  ,-math.sin(theta)  ],
-                                       [0., math.sin(theta) , math.cos(theta)  ] ] )
+                                       [0., math.cos(theta)  ,math.sin(theta)  ],
+                                       [0.,-math.sin(theta) , math.cos(theta)  ] ] )
         
         # rotation matrix about the z'-axis
 
-        rotation_matrix_3 = np.array([ [math.cos(psi),-math.sin(psi), 0.],
-                                       [math.sin(psi), math.cos(psi), 0.],
+        rotation_matrix_3 = np.array([ [math.cos(psi), math.sin(psi), 0.],
+                                       [-math.sin(psi), math.cos(psi), 0.],
                                        [0.            , 0.           , 1.] ] )
 
         euler_rotation_matrix = rotation_matrix_3.dot(rotation_matrix_2.dot(rotation_matrix_1))
@@ -173,13 +174,13 @@ class bone:
         # print(axis_1_prime_check)
         # print(axis_1_prime_prime_check)
         # print(axis_1_prime_prime_prime_check)
-        print(phi)
+        # print(phi)
         # print(theta)
-        # print(psi)
+        print(psi)
 
         vis.arrow( pos = (0., 0., 0.), axis = axis_1_prime_check, color = (1.0, 0., 1.0) )
-        # vis.arrow( pos = (0., 0., 0.), axis = axis_1_prime_prime_check, color = (1.0, 1.0, 0.) )
-        # vis.arrow( pos = (0., 0., 0.), axis = axis_1_prime_prime_prime_check, color = (0., 1.0, 1.0) )
+        vis.arrow( pos = (0., 0., 0.), axis = axis_1_prime_prime_check, color = (1.0, 1.0, 0.) )
+        vis.arrow( pos = (0., 0., 0.), axis = axis_1_prime_prime_prime_check, color = (0., 1.0, 1.0) )
         
         
     def visualize_bone(self):
