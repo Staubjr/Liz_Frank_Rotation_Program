@@ -127,6 +127,8 @@ class bone:
         axis_1_prime = np.cross(axis_3, axis_6)
         axis_1_prime /= bone.mag(axis_1_prime)
 
+        vis.arrow(pos = (0., 0., 0.), axis = axis_1_prime)
+
         # if axis_3[0] == axis_6_hat[0] and axis_3[1] == axis_3[1] and axis_3[2] == axis_3[2]:
         #     axis_1_prime = np.array([0., 0., 0.])
         
@@ -171,6 +173,9 @@ class bone:
         # print(axis_1_prime_check)
         # print(axis_1_prime_prime_check)
         # print(axis_1_prime_prime_prime_check)
+        print(phi)
+        # print(theta)
+        # print(psi)
 
         vis.arrow( pos = (0., 0., 0.), axis = axis_1_prime_check, color = (1.0, 0., 1.0) )
         # vis.arrow( pos = (0., 0., 0.), axis = axis_1_prime_prime_check, color = (1.0, 1.0, 0.) )
