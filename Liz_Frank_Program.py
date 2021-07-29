@@ -167,20 +167,27 @@ class bone:
         #                                   [math.cos(psi)*math.sin(phi) + math.cos(theta)*math.cos(phi)*math.sin(psi), -math.sin(phi)*math.sin(psi) + math.cos(theta)*math.cos(phi)*math.cos(psi), -math.sin(theta)*math.cos(phi)],
         #                                   [math.sin(theta)*math.sin(psi)                                            , math.sin(theta)*math.cos(psi)                                             ,  math.cos(theta)              ] ] )
 
-        axis_1_prime_check = axis_1.dot(rotation_matrix_1)        
-        axis_1_prime_prime_check = axis_1.dot(rotation_matrix_2.dot(rotation_matrix_1))
-        axis_1_prime_prime_prime_check = axis_1.dot(rotation_matrix_3.dot(rotation_matrix_2.dot(rotation_matrix_1)))
+        # axis_1_prime_check = axis_1.dot(rotation_matrix_1)        
+        # axis_1_prime_prime_check = axis_1.dot(rotation_matrix_2.dot(rotation_matrix_1))
+        # axis_1_prime_prime_prime_check = axis_1.dot(rotation_matrix_3.dot(rotation_matrix_2.dot(rotation_matrix_1)))
 
         # print(axis_1_prime_check)
         # print(axis_1_prime_prime_check)
         # print(axis_1_prime_prime_prime_check)
         # print(phi)
         # print(theta)
-        print(psi)
+        # print(psi)
 
-        vis.arrow( pos = (0., 0., 0.), axis = axis_1_prime_check, color = (1.0, 0., 1.0) )
-        vis.arrow( pos = (0., 0., 0.), axis = axis_1_prime_prime_check, color = (1.0, 1.0, 0.) )
-        vis.arrow( pos = (0., 0., 0.), axis = axis_1_prime_prime_prime_check, color = (0., 1.0, 1.0) )
+        check_1 = axis_1.dot(euler_rotation_matrix)
+        check_2 = axis_2.dot(euler_rotation_matrix)
+        check_3 = axis_3.dot(euler_rotation_matrix)
+
+        print(check_1)
+        print(check_2)
+        print(check_3)
+        print(axis_4)
+        print(axis_5)
+        print(axis_6)
         
         
     def visualize_bone(self):
