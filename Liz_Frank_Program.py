@@ -3,7 +3,7 @@ import numpy as np
 import math
 import random
 import matplotlib.pyplot as plt
-import physvis as vis
+#import physvis as vis
 import sys
 
 class txt:
@@ -77,7 +77,7 @@ class bone:
         self.initialize_axes()
         self.translate_screws()
         self.get_rotation_matrix(self.global_axes_matrix, self.local_axes_matrix)
-        self.visualize_bone()
+        # self.visualize_bone()
         
     def mag(vector):
         return math.sqrt(vector[0]**2 + vector[1]**2 + vector[2]**2)
@@ -102,6 +102,9 @@ class bone:
     def translate_screws(self):
         
         translation_vector = -1 * self.origin_screw.pos
+
+        print(translation_vector)
+        
         self.origin_screw.pos += translation_vector
         self.screw_2.pos += translation_vector
         self.screw_3.pos += translation_vector
@@ -182,12 +185,7 @@ class bone:
         check_2 = axis_2.dot(euler_rotation_matrix)
         check_3 = axis_3.dot(euler_rotation_matrix)
 
-        print(check_1)
-        print(check_2)
-        print(check_3)
-        print(axis_4)
-        print(axis_5)
-        print(axis_6)
+        print(euler_rotation_matrix)
         
         
     def visualize_bone(self):
@@ -275,16 +273,16 @@ def main():
 
     test = bone(x1 = X1, y1 = Y1, z1 = Z1, x2 = X2, y2 = Y2, z2 = Z2, x3 = X3, y3 = Y3, z3 = Z3)
 
-    t = 0
-    dt = 1E-3
+    # t = 0
+    # dt = 1E-3
 
-    vis.xaxis()
-    vis.yaxis()
-    vis.zaxis()
+    # vis.xaxis()
+    # vis.yaxis()
+    # vis.zaxis()
 
-    while t <= 100:
+    # while t <= 100:
         
-        vis.rate(30)
+    #     vis.rate(30)
         
     
 if __name__ == "__main__":
