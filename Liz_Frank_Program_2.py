@@ -12,23 +12,24 @@ class txt:
     """
 
     def __init__(self, foot_file):
-        txt.read_txt_file(foot_file)        
+        patient_name = foot_file.strip('.csv')
+        self.patient_name = str(patient_name)
+        self.read_txt_file(foot_file)
 
-
-    def read_txt_file(filename, foot):
+    def read_txt_file(self, filename):
         """ Read text file to find the positions
             of the screws in the foot bones.
         """
         Fixations = []
-        2MT_Proximal_xs = []
-        2MT_Proximal_ys = []
-        2MT_Proximal_zs = []
-        2MT_Distal_xs = []
-        2MT_Distal_ys = []
-        2MT_Distal_zs = []
-        2MT_3rd_xs = []
-        2MT_3rd_ys = []
-        2MT_3rd_zs = []
+        MT_Proximal_xs = []
+        MT_Proximal_ys = []
+        MT_Proximal_zs = []
+        MT_Distal_xs = []
+        MT_Distal_ys = []
+        MT_Distal_zs = []
+        MT_3rd_xs = []
+        MT_3rd_ys = []
+        MT_3rd_zs = []
         
         MC_Proximal_xs = []
         MC_Proximal_ys = []
@@ -54,37 +55,132 @@ class txt:
         lines = file.readlines()
         total_line_number = len(lines)
 
+        stop = False
+        
         for line_number in range(total_line_number):
-            line = lines[line_number].strip(",,,,\n")
-            line = line.split(",")
-
-            if len(line) == 1:
-                
-                header = False
-                stop = False
-                
-                potential_header = str(line[0])
-                
-                for index in range(0,len(potential_header)):
-                   if potential_header[index] == str("%"):
-                       header = True
-                       print(header)
-                       sys.exit(20)
-                       if len(lines[line_number + 1]) == 1:
-                              stop = True
-
-                if header = True and stop = False:
-                    Fixations.append(potential_header)
-                    2MT_Proximal_xs.append(lines[line_index+1][1])
-                    print(lines[line_index+1][1])
-                    sys.exit(20)
+            if stop == False:
             
-            sys.exit(20)
+                line = lines[line_number].strip(",,,,\n")
+                line = line.split(",")
 
-        
-        sys.exit(20)
+                header = False
+                
+                if len(line) == 1:
 
-        
+                    potential_header = str(line[0])
+                
+                    for index in range(0,len(potential_header)):
+                
+                        if potential_header[index] == str("%"):
+                            header = True
+
+                if header == True:
+                            
+                    check = lines[line_number + 1]
+                    check = check.strip(",,,,\n")
+                    check = check.split(",")
+                        
+                    if len(check) == 1:
+                        stop = True
+                    
+                if header == True and stop == False:
+
+                    Fixations.append(potential_header)
+                    
+                    line = lines[line_number+1].split(',')
+
+                    MT_Proximal_xs.append(float(line[2]))
+                    MT_Proximal_ys.append(float(line[3]))
+                    MT_Proximal_zs.append(float(line[4]))                    
+                    
+                    line = lines[line_number+2].split(',')
+                    
+                    MT_Distal_xs.append(float(line[2]))
+                    MT_Distal_ys.append(float(line[3]))
+                    MT_Distal_zs.append(float(line[4]))                    
+                    
+                    line = lines[line_number+7].split(',')
+                    
+                    MT_3rd_xs.append(float(line[2]))
+                    MT_3rd_ys.append(float(line[3]))
+                    MT_3rd_zs.append(float(line[4]))                    
+                    
+                    line = lines[line_number+3].split(',')
+                    
+                    MC_Proximal_xs.append(float(line[2]))
+                    MC_Proximal_ys.append(float(line[3]))
+                    MC_Proximal_zs.append(float(line[4]))                    
+                    
+                    line = lines[line_number+4].split(',')
+                    
+                    MC_Distal_xs.append(float(line[2]))
+                    MC_Distal_ys.append(float(line[3]))
+                    MC_Distal_zs.append(float(line[4]))                    
+                    
+                    line = lines[line_number+8].split(',')
+                    
+                    MC_3rd_xs.append(float(line[2]))
+                    MC_3rd_ys.append(float(line[3]))
+                    MC_3rd_zs.append(float(line[4]))                    
+                    
+                    line = lines[line_number+5].split(',')
+                    
+                    IC_Proximal_xs.append(float(line[2]))
+                    IC_Proximal_ys.append(float(line[3]))
+                    IC_Proximal_zs.append(float(line[4]))                    
+                    
+                    line = lines[line_number+6].split(',')
+                    
+                    IC_Distal_xs.append(float(line[2]))
+                    IC_Distal_ys.append(float(line[3]))
+                    IC_Distal_zs.append(float(line[4]))                    
+                    
+                    line = lines[line_number+9].split(',')
+                    
+                    z_value = line[4].strip('\n')
+                    
+                    IC_3rd_xs.append(float(line[3]))
+                    IC_3rd_ys.append(float(line[4]))
+                    IC_3rd_zs.append(float(z_value))
+                    
+        MT_Proximal = screw(Fixations, MT_Proximal_xs, MT_Proximal_ys, MT_Proximal_zs, identity = "MT_Proximal")
+        MT_Distal = screw(Fixations, MT_Distal_xs, MT_Distal_ys, MT_Distal_zs, identity = "MT_Distal")
+        MT_3rd = screw(Fixations, MT_3rd_xs, MT_3rd_ys, MT_3rd_zs, identity = "MT_3rd")
+        MC_Proximal = screw(Fixations, MC_Proximal_xs, MC_Proximal_ys, MC_Proximal_zs, identity = "MC_Proximal")
+        MC_Distal = screw(Fixations, MC_Distal_xs, MC_Distal_ys, MC_Distal_zs, identity = "MC_Distal")
+        MC_3rd = screw(Fixations, MC_3rd_xs, MC_3rd_ys, MC_3rd_zs, identity = "MC_3rd")
+        IC_Proximal = screw(Fixations, IC_Proximal_xs, IC_Proximal_ys, IC_Proximal_zs, identity = "IC_Proximal")
+        IC_Distal = screw(Fixations, IC_Distal_xs, IC_Distal_ys, IC_Distal_zs, identity = "IC_Distal")
+        IC_3rd = screw(Fixations, IC_3rd_xs, IC_3rd_ys, IC_3rd_zs, identity = "IC_3rd")
+
+        MT = bone(MT_Proximal, MT_Distal, MT_3rd, Fixations, "MT")
+        MC = bone(MC_Proximal, MC_Distal, MC_3rd, Fixations, "MC")
+        IC = bone(IC_Proximal, IC_Distal, IC_3rd, Fixations, "IC")
+
+        my_experiment = foot(MT, MC, IC, Fixations)
+        self.make_txt_file(my_experiment)
+
+    def make_txt_file(self, experiment):
+
+        file = open('{}_Matrices.txt'.format(str(self.patient_name)), 'w')
+        file_name = str('{}_Matrices.txt'.format(self.patient_name))
+
+        for index in range(len(experiment.fixations)):
+            file.write(experiment.fixations[index])
+            file.write("\n")
+            file.write(experiment.bones[0].bone_identity)
+            file.write("\n")
+            file.write(np.array2string(experiment.bones[0].matrices[index]))
+            file.write("\n")
+            file.write(experiment.bones[1].bone_identity)
+            file.write("\n")
+            file.write(np.array2string(experiment.bones[1].matrices[index]))
+            file.write("\n")
+            file.write(experiment.bones[2].bone_identity)
+            file.write("\n")
+            file.write(np.array2string(experiment.bones[2].matrices[index]))
+            file.write("\n\n")
+                    
 class experiment:
 
     """ Class for a single experiment that holds the objects in the foot class
@@ -104,23 +200,16 @@ class experiment:
 
 class foot:
 
-    all_bones = []
-
     """ Class for a single foot that holds the objects of the bone class.  Also, let's
         write this so that can tell if the foot is a left or a right as well, just purely
         based on the ID.  Not sure if I'll actually do something with this or raise an
         error if there is an issue...
     """
     
-    def __init__(self):
-        self.screw_1 = []
-        self.screw_2 = []
-        self.screw_3 = []
-        self.screw_4 = []
-        self.screw_6 = []
-        self.screw_7 = []
-        self.screw_8 = []
-        self.screw_9 = []
+    def __init__(self, bone_1, bone_2, bone_3, fixations):
+        self.bones = [bone_1, bone_2, bone_3]
+        self.fixations = fixations
+
 
 class bone:
 
@@ -133,17 +222,28 @@ class bone:
 
     """
     all_screws = []
-    
-    def __init__(self, x1, y1, z1, x2, y2, z2, x3, y3, z3, bone_identity):
-        self.origin_screw = screw(x = x1, y = y1, z = z1, identity = "origin")
-        self.screw_2 = screw(x = x2, y = y2, z = z2, identity = "screw_2")
-        self.screw_3 = screw(x = x3, y = y3, z = z3, identity = "screw_3")
+    matrices = []
+
+    def __init__(self, screw_1, screw_2, screw_3, fixations, bone_identity):
+        self.origin_screw = screw_1
+        self.screw_2 = screw_2
+        self.screw_3 = screw_3
+        self.fixations = fixations
+        self.number_of_fixations = len(fixations)
+        self.bone_identity = bone_identity
+        self.translation_vector = np.array([0., 0., 0.])
         self.local_axes_matrix = np.zeros((3,3))
         self.global_axes_matrix = np.array([[1., 0., 0.],[0., 1., 0.], [0., 0., 1.]])
         self.unit_vector = np.array([1/math.sqrt(3), 1/math.sqrt(3), 1/math.sqrt(3)])
-        self.initialize_axes()
-        self.translate_screws()
-        self.get_rotation_matrix(self.global_axes_matrix, self.local_axes_matrix)
+
+        for index in range(self.number_of_fixations):
+            self.origin_screw.pos = np.array([self.origin_screw.xs[index], self.origin_screw.ys[index], self.origin_screw.zs[index]])  
+            self.screw_2.pos = np.array([self.screw_2.xs[index], self.screw_2.ys[index], self.screw_2.zs[index]])  
+            self.screw_3.pos = np.array([self.screw_3.xs[index], self.screw_3.ys[index], self.screw_3.zs[index]])  
+            
+            self.initialize_axes()
+            self.translate_screws()
+            self.get_rotation_matrix(self.global_axes_matrix, self.local_axes_matrix)
         # self.visualize_bone()
         
     def mag(vector):
@@ -169,8 +269,7 @@ class bone:
     def translate_screws(self):
         
         translation_vector = -1 * self.origin_screw.pos
-
-        print(translation_vector)
+        self.translation_vector = translation_vector
         
         self.origin_screw.pos += translation_vector
         self.screw_2.pos += translation_vector
@@ -233,9 +332,25 @@ class bone:
 
         euler_rotation_matrix = rotation_matrix_3.dot(rotation_matrix_2.dot(rotation_matrix_1))
 
-        # euler_rotation_matrix  = np.array([[math.cos(psi)*math.cos(phi) - math.cos(theta)*math.sin(psi)*math.sin(phi), -math.sin(psi)*math.cos(phi) - math.cos(theta)*math.sin(phi)*math.cos(psi),  math.sin(theta)*math.sin(phi)],
-        #                                   [math.cos(psi)*math.sin(phi) + math.cos(theta)*math.cos(phi)*math.sin(psi), -math.sin(phi)*math.sin(psi) + math.cos(theta)*math.cos(phi)*math.cos(psi), -math.sin(theta)*math.cos(phi)],
-        #                                   [math.sin(theta)*math.sin(psi)                                            , math.sin(theta)*math.cos(psi)                                             ,  math.cos(theta)              ] ] )
+        final_matrix = np.zeros((4,4))
+
+        final_matrix[0][0] = euler_rotation_matrix[0][0]
+        final_matrix[0][1] = euler_rotation_matrix[0][1]
+        final_matrix[0][2] = euler_rotation_matrix[0][2]
+        final_matrix[1][0] = euler_rotation_matrix[1][0]
+        final_matrix[1][1] = euler_rotation_matrix[1][1]
+        final_matrix[1][2] = euler_rotation_matrix[1][2]
+        final_matrix[2][0] = euler_rotation_matrix[2][0]
+        final_matrix[2][1] = euler_rotation_matrix[2][1]
+        final_matrix[2][2] = euler_rotation_matrix[2][2]
+        
+        final_matrix[0][3] = self.translation_vector[0]
+        final_matrix[1][3] = self.translation_vector[1]
+        final_matrix[2][3] = self.translation_vector[2]
+        final_matrix[3][3] = float(1.0)
+
+        bone.matrices.append(final_matrix)
+
 
         # axis_1_prime_check = axis_1.dot(rotation_matrix_1)        
         # axis_1_prime_prime_check = axis_1.dot(rotation_matrix_2.dot(rotation_matrix_1))
@@ -248,12 +363,9 @@ class bone:
         # print(theta)
         # print(psi)
 
-        check_1 = axis_1.dot(euler_rotation_matrix)
-        check_2 = axis_2.dot(euler_rotation_matrix)
-        check_3 = axis_3.dot(euler_rotation_matrix)
-
-        print(euler_rotation_matrix)
-        
+        # check_1 = axis_1.dot(euler_rotation_matrix)
+        # check_2 = axis_2.dot(euler_rotation_matrix)
+        # check_3 = axis_3.dot(euler_rotation_matrix)
         
     def visualize_bone(self):
 
@@ -273,9 +385,9 @@ class screw:
         self.ys = ys
         self.zs = zs
         self.positions = []
-
-        for index in len(self.fixations):
-            self.positions.append(np.array([self.x[index], self.y[index], self.z[index]]))
+        
+        for index in range(len(self.fixations)):
+            self.positions.append(np.array([self.xs[index], self.ys[index], self.zs[index]]))
 
         self.identity = identity
         self.bone = []
