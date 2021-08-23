@@ -166,6 +166,7 @@ class txt:
         file_name = str('{}_Matrices.txt'.format(self.patient_name))
 
         for index in range(len(experiment.fixations)):
+            
             file.write(experiment.fixations[index])
             file.write("\n")
             file.write(experiment.bones[0].bone_identity)
@@ -222,13 +223,13 @@ class bone:
 
     """
     all_screws = []
-    matrices = []
 
     def __init__(self, screw_1, screw_2, screw_3, fixations, bone_identity):
         self.origin_screw = screw_1
         self.screw_2 = screw_2
         self.screw_3 = screw_3
         self.fixations = fixations
+        self.matrices = []
         self.number_of_fixations = len(fixations)
         self.bone_identity = bone_identity
         self.translation_vector = np.array([0., 0., 0.])
@@ -349,7 +350,7 @@ class bone:
         final_matrix[2][3] = self.translation_vector[2]
         final_matrix[3][3] = float(1.0)
 
-        bone.matrices.append(final_matrix)
+        self.matrices.append(final_matrix)
 
 
         # axis_1_prime_check = axis_1.dot(rotation_matrix_1)        
