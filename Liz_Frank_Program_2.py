@@ -105,13 +105,13 @@ class txt:
                     MT_3rd_ys.append(float(line[3]))
                     MT_3rd_zs.append(float(line[4]))                    
                     
-                    line = lines[line_number+3].split(',')
+                    line = lines[line_number+4].split(',')
                     
                     MC_Proximal_xs.append(float(line[2]))
                     MC_Proximal_ys.append(float(line[3]))
                     MC_Proximal_zs.append(float(line[4]))                    
                     
-                    line = lines[line_number+4].split(',')
+                    line = lines[line_number+3].split(',')
                     
                     MC_Distal_xs.append(float(line[2]))
                     MC_Distal_ys.append(float(line[3]))
@@ -171,15 +171,15 @@ class txt:
             file.write("\n")
             file.write(experiment.bones[0].bone_identity)
             file.write("\n")
-            file.write(np.array2string(experiment.bones[0].matrices[index]))
+            file.write(np.array2string(experiment.bones[0].matrices[index], precision = 2))
             file.write("\n")
             file.write(experiment.bones[1].bone_identity)
             file.write("\n")
-            file.write(np.array2string(experiment.bones[1].matrices[index]))
+            file.write(np.array2string(experiment.bones[1].matrices[index], precision = 2))
             file.write("\n")
             file.write(experiment.bones[2].bone_identity)
             file.write("\n")
-            file.write(np.array2string(experiment.bones[2].matrices[index]))
+            file.write(np.array2string(experiment.bones[2].matrices[index], precision = 2))
             file.write("\n\n")
                     
 class experiment:
@@ -237,6 +237,10 @@ class bone:
         self.global_axes_matrix = np.array([[1., 0., 0.],[0., 1., 0.], [0., 0., 1.]])
         self.unit_vector = np.array([1/math.sqrt(3), 1/math.sqrt(3), 1/math.sqrt(3)])
 
+        self.intial_translation_matrix = np.zeros(3)
+
+        self.initial_translation_vector = np.array([-self.origin_screw.xs[0], -self.origin_screw.ys[0], -self.origin_screw.zs[0]])
+
         for index in range(self.number_of_fixations):
             self.origin_screw.pos = np.array([self.origin_screw.xs[index], self.origin_screw.ys[index], self.origin_screw.zs[index]])  
             self.screw_2.pos = np.array([self.screw_2.xs[index], self.screw_2.ys[index], self.screw_2.zs[index]])  
@@ -252,12 +256,12 @@ class bone:
         
     def initialize_axes(self):
 
-        origin = self.origin_screw.pos
-        point1 = self.screw_2.pos
-        point2 = self.screw_3.pos
+        origin = self.origin_screw.pos - self.initial_translation_vector
+        point1 = self.screw_2.pos - self.initial_translation_vector
+        point2 = self.screw_3.pos - self.initial_translation_vector
 
-        axis_1 = self.screw_2.pos - self.origin_screw.pos
-        temp_vector = self.screw_3.pos - self.origin_screw.pos
+        axis_1 = point1 - origin
+        temp_vector = point2 - origin
 
         axis_2 = np.cross(axis_1, temp_vector)
         axis_3 = np.cross(axis_1, axis_2)
@@ -269,7 +273,7 @@ class bone:
 
     def translate_screws(self):
         
-        translation_vector = -1 * self.origin_screw.pos
+        translation_vector = -1 * self.origin_screw.pos - self.initial_translation_vector
         self.translation_vector = translation_vector
         
         self.origin_screw.pos += translation_vector
